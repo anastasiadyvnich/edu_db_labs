@@ -2,6 +2,10 @@
 
 ## 1. Діаграма прецедентів
 
+</center>
+
+Загальна схема
+
 <center style="
     border-radius:4px;
     border: 1px solid #cfd7e6;
@@ -39,6 +43,76 @@
 
 </center>
 
+</center>
+
+Схема користувача
+
+<center style="
+    border-radius:4px;
+    border: 1px solid #cfd7e6;
+    box-shadow: 0 1px 3px 0 rgba(89,105,129,.05), 0 1px 1px 0 rgba(0,0,0,.025);
+    padding: 1em;"
+>
+
+@startuml
+
+    actor "Користувач" as User
+
+    usecase "Створення та використання облікового запису" as CreateAccount
+    usecase "Створення одного або кількох запитів для аналізу медіа-контенту" as CreateQueries
+    usecase "Встановлення фільтрів для аналізу інформації" as SetFilters
+    usecase "Побудова звітів та візуалізація даних" as BuildReports
+    usecase "Перегляд історії запитів" as ViewHistory
+    usecase "Порівняння результатів аналізу даних" as CompareResults
+    usecase "Експорт звітів аналізу інформації" as ExportReports
+
+    User -u-> CreateAccount
+    User -u-> CreateQueries
+    User -u-> SetFilters
+    User -r-> BuildReports
+    User --> ViewHistory
+    User --> CompareResults
+    User -l-> ExportReports
+
+@enduml
+
+</center>
+
+</center>
+
+Схема адміністратора
+
+<center style="
+    border-radius:4px;
+    border: 1px solid #cfd7e6;
+    box-shadow: 0 1px 3px 0 rgba(89,105,129,.05), 0 1px 1px 0 rgba(0,0,0,.025);
+    padding: 1em;"
+>
+
+@startuml
+
+    actor "Адміністратор" as Admin
+
+    usecase "Управління користувачами і правами доступу" as AccessRights
+    usecase "Налаштування параметрів аналізу та пошуку" as SearchParameters
+    usecase "Моніторинг ресурсів і продуктивності системи" as ResourceManagement
+    usecase "Забезпечення безпеки даних" as SystemSecurity
+    usecase "Підтримка користувачів" as UserSupport
+    usecase "Моніторинг та адміністрування системи" as SystemAdministration 
+    usecase "Керування базами даних" as DatabaseManagement
+
+    Admin -u-> AccessRights
+    Admin -u-> SearchParameters
+    Admin -u-> ResourceManagement
+    Admin -r-> SystemSecurity
+    Admin --> UserSupport
+    Admin --> SystemAdministration
+    Admin -l-> DatabaseManagement
+
+@enduml
+
+</center>
+
 ## Сценарії використання для користувача
 
 | **_ID:_**                | USER.REGISTRATION                                                           |
@@ -56,24 +130,24 @@
 
 @startuml
 
-|Користувач|
-start
-: Вводить реєстраційні дані;
+    |Користувач|
+    start
+    : Вводить реєстраційні дані;
 
-|Система|
-: Система перевіряє передані реєстраційні дані
-<font color="red"><b>USER.REGISTRATION_EXIST == True
-<font color="red"><b>USER.INJECTION_DENY
-<font color="red"><b>USER.DDOS_DENY;
+    |Система|
+    : Система перевіряє передані реєстраційні дані
+    <font color="red"><b>USER.REGISTRATION_EXIST == True
+    <font color="red"><b>USER.INJECTION_DENY
+    <font color="red"><b>USER.DDOS_DENY;
 
-: Система створює новий обліковий
-запис, використовуючи введені дані;
+    : Система створює новий обліковий
+    запис, використовуючи введені дані;
 
-: Система надає користувачу інформацію
-про створення облікового запису;
+    : Система надає користувачу інформацію
+    про створення облікового запису;
 
-|Користувач|  
- : Завершує взаємодію з системою;
+    |Користувач|  
+    : Завершує взаємодію з системою;
 
     stop;
 
@@ -93,21 +167,21 @@ start
 
 @startuml
 
-|Користувач|
-start
-: Вводить дані логіну та паролю ;
+    |Користувач|
+    start
+    : Вводить дані логіну та паролю ;
 
-|Система|
-: Система перевіряє передані реєстраційні дані
-<font color="red"><b>USER.REGISTRATION_EXIST == False
-<font color="red"><b>USER.INJECTION_DENY
-<font color="red"><b>USER.DDOS_DENY;
+    |Система|
+    : Система перевіряє передані реєстраційні дані
+    <font color="red"><b>USER.REGISTRATION_EXIST == False
+    <font color="red"><b>USER.INJECTION_DENY
+    <font color="red"><b>USER.DDOS_DENY;
 
-: Система перевіряє відповідність ідентифікаторів ;
+    : Система перевіряє відповідність ідентифікаторів ;
 
-: Система автентифікує користувача ;
+    : Система автентифікує користувача ;
 
-: Система авторизує користувача;
+    : Система авторизує користувача;
 
 stop;
 
@@ -125,25 +199,25 @@ stop;
 
 @startuml
 
-|Користувач|
-start
-: Користувач надсилає запит
-на вихід з системи;
+    |Користувач|
+    start
+    : Користувач надсилає запит
+    на вихід з системи;
 
-|Система|
-: Система перевіряє передані реєстраційні дані
-<font color="red"><b>USER.ONLINE == False;
+    |Система|
+    : Система перевіряє передані реєстраційні дані
+    <font color="red"><b>USER.ONLINE == False;
 
-: Система завершає поточну
-сессію з користувачем;
+    : Система завершає поточну
+    сессію з користувачем;
 
-: Система повідомляє користувача
-про те що він вийшов з системи;
+    : Система повідомляє користувача
+    про те що він вийшов з системи;
 
-: Система перенаправляє користувача
-на головну сторінку додатку;
+    : Система перенаправляє користувача
+    на головну сторінку додатку;
 
-stop;
+    stop;
 
 @enduml
 
@@ -161,27 +235,27 @@ stop;
 
 @startuml
 
-|Користувач|
-start
-: Користувач відправляє запит на пошук;
+    |Користувач|
+    start
+    : Користувач відправляє запит на пошук;
 
-|Система|
-: Система виводить форму
-для заповнення користувачем;
+    |Система|
+    : Система виводить форму
+    для заповнення користувачем;
 
-|Користувач|
-: Користувач заповнює форму;
+    |Користувач|
+    : Користувач заповнює форму;
 
-|Система|
-: Система проводить пошук по
-базам даних заданих ресурсів
-<font color="red"><b>USER.INJECTION_DENY
-<font color="red"><b>USER.LICENSE_DENY
-<font color="red"><b>USER.DDOS_DENY;
+    |Система|
+    : Система проводить пошук по
+    базам даних заданих ресурсів
+    <font color="red"><b>USER.INJECTION_DENY
+    <font color="red"><b>USER.LICENSE_DENY
+    <font color="red"><b>USER.DDOS_DENY;
 
-: Система виводить результат на екран користувача;
+    : Система виводить результат на екран користувача;
 
-stop;
+    stop;
 
 @enduml
 
@@ -199,24 +273,24 @@ stop;
 
 @startuml
 
-|Користувач|
-start
-: Користувач обирає у якому форматі
-він хоче експортувати результати пошуку;
+    |Користувач|
+    start
+    : Користувач обирає у якому форматі
+    він хоче експортувати результати пошуку;
 
-: Користувач відправляє запит
-на експорт інформації;
+    : Користувач відправляє запит
+    на експорт інформації;
 
-|Система|
-: Система генерує файл та
-надсилає його як відповідь на запит
-<font color="red"><b>USER.EXPORT_ERROR
-<font color="red"><b>USER.DDOS_DENY;
+    |Система|
+    : Система генерує файл та
+    надсилає його як відповідь на запит
+    <font color="red"><b>USER.EXPORT_ERROR
+    <font color="red"><b>USER.DDOS_DENY;
 
-|Користувач|
-: Користувач отримує файл і
-завершує взаємодію з системою;
-stop;
+    |Користувач|
+    : Користувач отримує файл і
+    завершує взаємодію з системою;
+    stop;
 
 @enduml
 
@@ -235,22 +309,22 @@ stop;
 
 @startuml
 
-|Адміністратор|
-start
-: Адміністратор надсилає запит системі
-на зміну паролю користувача ;
+    |Адміністратор|
+    start
+    : Адміністратор надсилає запит системі
+    на зміну паролю користувача ;
 
-|Система|
-: Система змінює пароль користувача
-<font color="red"><b>USER.INJECTION_DENY
-<font color="red"><b>USER.REGISTRATION_EXIST == False;
+    |Система|
+    : Система змінює пароль користувача
+    <font color="red"><b>USER.INJECTION_DENY
+    <font color="red"><b>USER.REGISTRATION_EXIST == False;
 
-|Адміністратор|
-: Адміністратор отримує підтвердження
-про успішну зміну паролю;
-: Адміністратор завершує процедуру
-зміни паролю користувача;
-stop;
+    |Адміністратор|
+    : Адміністратор отримує підтвердження
+    про успішну зміну паролю;
+    : Адміністратор завершує процедуру
+    зміни паролю користувача;
+    stop;
 
 @enduml
 

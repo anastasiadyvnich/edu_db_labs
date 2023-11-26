@@ -2,6 +2,10 @@
 
 ## 1. Діаграма прецедентів
 
+</center>
+
+Загальна схема
+
 <center style="
     border-radius:4px;
     border: 1px solid #cfd7e6;
@@ -34,6 +38,76 @@
     Expert --|> Guest
     Expert --> UC_5
     Expert --> UC_6
+
+@enduml
+
+</center>
+
+</center>
+
+Схема користувача
+
+<center style="
+    border-radius:4px;
+    border: 1px solid #cfd7e6;
+    box-shadow: 0 1px 3px 0 rgba(89,105,129,.05), 0 1px 1px 0 rgba(0,0,0,.025);
+    padding: 1em;"
+>
+
+@startuml
+
+    actor "Користувач" as User
+
+    usecase "Створення та використання облікового запису" as CreateAccount
+    usecase "Створення одного або кількох запитів для аналізу медіа-контенту" as CreateQueries
+    usecase "Встановлення фільтрів для аналізу інформації" as SetFilters
+    usecase "Побудова звітів та візуалізація даних" as BuildReports
+    usecase "Перегляд історії запитів" as ViewHistory
+    usecase "Порівняння результатів аналізу даних" as CompareResults
+    usecase "Експорт звітів аналізу інформації" as ExportReports
+
+    User -u-> CreateAccount
+    User -u-> CreateQueries
+    User -u-> SetFilters
+    User -r-> BuildReports
+    User --> ViewHistory
+    User --> CompareResults
+    User -l-> ExportReports
+
+@enduml
+
+</center>
+
+</center>
+
+Схема адміністратора
+
+<center style="
+    border-radius:4px;
+    border: 1px solid #cfd7e6;
+    box-shadow: 0 1px 3px 0 rgba(89,105,129,.05), 0 1px 1px 0 rgba(0,0,0,.025);
+    padding: 1em;"
+>
+
+@startuml
+
+    actor "Адміністратор" as Admin
+
+    usecase "Управління користувачами і правами доступу" as AccessRights
+    usecase "Налаштування параметрів аналізу та пошуку" as SearchParameters
+    usecase "Моніторинг ресурсів і продуктивності системи" as ResourceManagement
+    usecase "Забезпечення безпеки даних" as SystemSecurity
+    usecase "Підтримка користувачів" as UserSupport
+    usecase "Моніторинг та адміністрування системи" as SystemAdministration 
+    usecase "Керування базами даних" as DatabaseManagement
+
+    Admin -u-> AccessRights
+    Admin -u-> SearchParameters
+    Admin -u-> ResourceManagement
+    Admin -r-> SystemSecurity
+    Admin --> UserSupport
+    Admin --> SystemAdministration
+    Admin -l-> DatabaseManagement
 
 @enduml
 

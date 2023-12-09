@@ -107,18 +107,6 @@
         entity Member {
             ID: UUID
         }
-
-        entity Role {
-            ID: UUID
-        }
-
-        entity RoleGrant {
-            ID: UUID
-        }
-
-        entity Permission {
-            ID: UUID
-        }
     }
 
     package UserProfile {
@@ -137,14 +125,12 @@
     ProjectManagment.Project "1.1" <-- "0.*" ProjectManagment.PaymentData
     ProjectManagment.Project "1.1" <-- "0.*" ProjectManagment.Review
 
-    AccessPolicy.Role "1.1" <-- "0." AccessPolicy.Member
-    AccessPolicy.Role "1.1" <-- "0." AccessPolicy.RoleGrant
-    AccessPolicy.Permission "1.1" <-- "0." AccessPolicy.RoleGrant
     UserProfile.User "1.1" <-- "0." AccessPolicy.Member
 
     AccessPolicy.Member "1.1" <-- "0.*" ProjectManagment.ProjectMember
 
 @enduml
+
 
 
 

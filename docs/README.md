@@ -7,9 +7,9 @@ footer: "ECL 2.0 Licensed | Copyright © [YYYY] [Your Name]"
 ---
 
 
-**Виконав(-ла):** 
+**Виконала:** 
 
-*студенnка 2-го курсу, групи (ІМ-23)*<span padding-right:5em></span> **[Дивнич Анастасія] [anastasiaduvnich@gmail.com, @adyvnych]**
+*студентка 2-го курсу, групи (ІМ-23)*<span padding-right:5em></span> **[Дивнич Анастасія] [anastasiaduvnich@gmail.com, @adyvnych]**
 
 **Керівник**
 

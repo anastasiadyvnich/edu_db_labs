@@ -1,7 +1,9 @@
 # Реалізація інформаційного та програмного забезпечення
 
-В рамках проекту розробляється: 
-- SQL-скрипт для створення на початкового наповнення бази даних
+В рамках проєкту розробляється:
+
+## SQL-скрипт для створення на початкового наповнення бази даних
+
 ```sql
 -- MySQL Workbench Forward Engineering
 
@@ -137,5 +139,200 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 ```
-- RESTfull сервіс для управління даними
 
+## RESTfull сервіс для управління даними
+
+### Вхідний файл програми
+
+```js
+const express = require("express");
+const cors = require("cors");
+const userRouter = require("./routes/userRouter");
+const AppError = require("./errors/appError");
+const errorHandler = require("./errors/errorHandler");
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use(userRouter);
+
+app.all("*", (req, res, next) => {
+  next(new AppError(`The URL ${req.originalUrl} does not exists`, 404));
+});
+app.use(errorHandler);
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+module.exports = app;
+```
+
+### Файл для встановлення доступу до бази даних
+
+```js
+const mysql = require("mysql2");
+require("dotenv").config();
+
+const dbConnect = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+});
+
+dbConnect.connect();
+
+module.exports = dbConnect;
+```
+
+### CRUD для користувачів
+
+#### Маршрути
+
+```js
+const express = require("express");
+const controllers = require("../controllers/userControllers");
+const { router } = require("express/lib/application");
+const userRouter = express.Router();
+
+userRouter.route("/users").get(controllers.getAllUsers);
+
+userRouter.route("/users").post(controllers.createUser);
+
+userRouter.route("/users/:id").get(controllers.getUserById);
+
+userRouter.route("/users/:id").put(controllers.updateUser);
+
+userRouter.route("/users/:id").delete(controllers.deleteUser);
+
+module.exports = userRouter;
+```
+
+#### Контроллер
+
+```js
+const AppError = require("../errors/appError");
+const dbConnect = require("../connection/connection");
+
+exports.getAllUsers = (req, res, next) => {
+  dbConnect.query("SELECT * FROM user", function (err, data, fields) {
+    if (err) return next(new AppError(err));
+    res.status(200).json({
+      status: "success",
+      length: data?.length,
+      data: data,
+    });
+  });
+};
+
+exports.createUser = (req, res, next) => {
+  if (!req.body) return next(new AppError("No form data found", 404));
+  const values = [
+    req.body.login,
+    req.body.email,
+    req.body.Role,
+    req.body.password,
+    (req.body.picture = null),
+  ];
+  dbConnect.query(
+    "INSERT INTO user (login, email, Role, password, picture) VALUES(?)",
+    [values],
+    function (err, data, fields) {
+      if (err) return next(new AppError(err, 500));
+      res.status(201).json({
+        status: "success",
+        message: "user added!",
+      });
+    }
+  );
+};
+
+exports.getUserById = (req, res, next) => {
+  if (!req.params.id) {
+    return next(new AppError("No user id found", 404));
+  }
+  dbConnect.query(
+    "SELECT * FROM user WHERE idUser = ?",
+    [req.params.id],
+    function (err, data, fields) {
+      if (data.length === 0) return next(new AppError("User not found", 404));
+      if (err) return next(new AppError(err, 500));
+      res.status(200).json({
+        status: "success",
+        length: data?.length,
+        data: data,
+      });
+    }
+  );
+};
+
+exports.updateUser = (req, res, next) => {
+  if (!req.params.id) {
+    return next(new AppError("No user id found", 404));
+  }
+  dbConnect.query(
+    "UPDATE user SET login=?, email=?, Role=?, password=? WHERE idUser=?",
+    [
+      req.body.login,
+      req.body.email,
+      req.body.Role,
+      req.body.password,
+      req.params.id,
+    ],
+    function (err, data, fields) {
+      if (err) return next(new AppError(err, 500));
+      res.status(201).json({
+        status: "success",
+        message: "user info updated!",
+      });
+    }
+  );
+};
+
+exports.deleteUser = (req, res, next) => {
+  if (!req.params.id) {
+    return next(new AppError("No todo id found", 404));
+  }
+  dbConnect.query(
+    "DELETE FROM user WHERE idUser=?",
+    [req.params.id],
+    function (err, fields) {
+      if (err) return next(new AppError(err, 500));
+      res.status(201).json({
+        status: "success",
+        message: "user deleted!",
+      });
+    }
+  );
+};
+```
+
+### Обробники помилок
+
+```js
+class AppError extends Error {
+  constructor(msg, statusCode) {
+    super(msg);
+
+    this.statusCode = statusCode;
+    this.error = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.isOperational = true;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+module.exports = AppError;
+```
+
+```js
+module.exports = (err, req, res, next) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "error";
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
+};
+```
